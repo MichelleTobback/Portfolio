@@ -5,93 +5,136 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-	<head>
-		<title>Boon Engine</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+<head>
+	<title>Boon Engine</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
 
-		<!-- Wrapper -->
-		<div id="wrapper">
+	<!-- Wrapper -->
+	<div id="wrapper">
 
-			<!-- Header -->
-			<header id="header">
-				<a href="index.html" class="logo">Michelle Tobback</a>
-			</header>
+		<!-- Header -->
+		<header id="header">
+			<a href="index.html" class="logo">Michelle Tobback</a>
+		</header>
 
-			<!-- Nav -->
-			<nav id="nav">
-				<ul class="links">
-					<li><a href="index.html">Projects</a></li>
-					<li class="active"><a href="art.html">Art</a></li>
-					<li><a href="contact.html">Contact</a></li>
+		<!-- Nav -->
+		<nav id="nav">
+			<ul class="links">
+				<li><a href="index.html">Projects</a></li>
+				<li class="active"><a href="art.html">Art</a></li>
+				<li><a href="contact.html">Contact</a></li>
+			</ul>
+			<ul class="icons">
+				<li><a href="https://github.com/MichelleTobback" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+				<li><a href="https://www.linkedin.com/in/michelle-tobback-30628b304/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
+				<li><a href="https://hedera-the-vvitch.itch.io/" class="icon brands fa-itch-io"><span class="label">ItchIO</span></a></li>
+				<li><a href="https://sketchfab.com/michelletobback" i class="fa-solid fa-cube"></a></li>
+			</ul>
+		</nav>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Post -->
+			<section class="post">
+				<header class="major">
+					<span class="date">May 29, 2023</span>
+					<h1>
+						Boon Engine
+					</h1>
+					<p>
+						An actively developed, compact multiplayer game engine I built to explore engine architecture, editor tooling and networked gameplay. The codebase combines a small renderer and physics layer, a desktop editor and a sandbox, and a networking stack that uses Valve's GameNetworkingSockets for low-level transport.
+					</p>
+				</header>
+				<p>
+					<a href="https://github.com/MichelleTobback/Boon-Engine">View the Boon Engine repository on GitHub</a>
+				</p>
+				<div class="image main"><img src="images/BoonEngine/Boon_02.png" alt="Boon Engine editor screenshot" /></div>
+				<div class="image main"><img src="images/BoonEngine/Boon_01.png" alt="Boon Engine runtime screenshot" /></div>
+
+				<h2>Overview</h2>
+				<p>
+					Boon Engine is a hands-on project that focuses on the engineering problems behind multiplayer 2D games rather than delivering a commercial feature set. The repository contains a runtime, a desktop editor and a sandbox module for rapid iteration. Key subsystems present in the code are a component-oriented scene model with generated components and reflection, a sprite and tilemap renderer with batching, Box2D-based 2D physics, an asset pipeline with importers and a registry, and a networking layer built on top of GameNetworkingSockets.
+				</p>
+
+				<h2>Interesting technical highlights</h2>
+				<ul>
+					<li>
+						<strong>Networking and transport</strong> — low-level transport is integrated in <code>Boon/src/Platform/Steam/SteamNetDriver.cpp</code> using Valve's GameNetworkingSockets. The project builds higher-level abstractions such as <code>NetConnection</code>, <code>NetPacket</code> and <code>NetRPC</code> and uses a scene-level replication layer implemented in <code>NetRepRegistry</code> and <code>NetRepCore</code>.
+					</li>
+					<li>
+						<strong>Replication and serializers</strong> — the engine demonstrates component-level serialization with concrete serializers like <code>NetTransform</code> and <code>NetRigidbody2DSerializer</code>, showing how component state is packaged for transmission and applied on the receiving side.
+					</li>
+					<li>
+						<strong>Reflection and generated components</strong> — a small reflection layer (<code>BClass</code>, <code>BProperty</code>, <code>BFunction</code>) and generated files (for example <code>Generated_Components.cpp</code>) let the editor, serializer and networking code reuse the same metadata, reducing duplication and simplifying iteration.
+					</li>
+					<li>
+						<strong>Editor and asset tooling</strong> — the repository includes an editor with asset panels, tilemap and sprite atlas editors, plus an <code>AssetLoader</code> and <code>AssetRegistry</code> to manage imported content and feed the live sandbox.
+					</li>
+					<li>
+						<strong>Rendering and physics integration</strong> — a minimal renderer exposes vertex/index buffers, uniform buffers and render batches used by the tilemap and sprite systems, while Box2D is wrapped by a <code>PhysicsWorld2D</code> abstraction and exposed through serializable rigidbody and collision components.
+					</li>
 				</ul>
-				<ul class="icons">
-					<li><a href="https://github.com/MichelleTobback" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-				</ul>
-			</nav>
 
-			<!-- Main -->
-			<div id="main">
+				<h2>What I was trying to solve</h2>
+				<p>
+					I wanted a compact, end-to-end environment to experiment with multiplayer concerns: efficient component serialization, a replication pipeline that maps naturally to an entity-component model, and editor tooling that supports fast content iteration. Choosing GameNetworkingSockets as the transport gives me precise control over reliability and latency characteristics, which is important when prototyping prediction, interpolation and synchronization strategies.
+				</p>
 
-				<!-- Post -->
-				<section class="post">
-					<header class="major">
-						<span class="date">May 29, 2023</span>
-						<h1>
-							Boon Engine
-						</h1>
-						<p>
-							A multiplayer game engine i am actively developing using valve's steam <a href="https://github.com/ValveSoftware/GameNetworkingSockets">GameNetworkingSockets</a>
-						</p>
-					</header>
-					<div class="image main"><img src="images/BoonEngine/Boon_02.png" alt="" /></div>
-					<div class="image main"><img src="images/BoonEngine/Boon_01.png" alt="" /></div>
-				</section>
-
-			</div>
-
-			<!-- Footer -->
-			<footer id="footer">
-
-				<section class="split contact">
-					<section class="alt">
-						<h3>Location</h3>
-						<p>
-							8870 Emelgem, Belgium
-						</p>
-					</section>
-					<section>
-						<h3>Email</h3>
-						<p><a href=michelletobback99@gmail.com>michelletobback99@gmail.com</a></p>
-					</section>
-					<section>
-						<h3>Social</h3>
-						<ul class="icons alt">
-							<li><a href="https://github.com/MichelleTobback" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-						</ul>
-					</section>
-				</section>
-			</footer>
-
-			<!-- Copyright -->
-			<div id="copyright">
-				<ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
-			</div>
+				<h2>What I learned</h2>
+				<p>
+					Building Boon Engine reinforced how many small systems must work together for multiplayer to feel robust: clear transport abstractions, compact and stable serialization, and editor workflows that keep iteration tight. Integrating network transport and exposing replication primitives highlighted practical trade-offs between packetization, reliability and debugging complexity. The reflection and generated-component approach proved valuable for sharing code between editor and runtime. The project is actively developed and serves as a practical testbed for future experiments in prediction, interpolation and deterministic synchronization.
+				</p>
+			</section>
 
 		</div>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+		<!-- Footer -->
+		<footer id="footer">
 
-	</body>
+			<section class="split contact">
+				<section class="alt">
+					<h3>Location</h3>
+					<p>
+						8870 Emelgem, Belgium
+					</p>
+				</section>
+				<section>
+					<h3>Email</h3>
+					<p><a href=michelletobback99@gmail.com>michelletobback99@gmail.com</a></p>
+				</section>
+				<section>
+					<h3>Social</h3>
+					<ul class="icons">
+						<li><a href="https://github.com/MichelleTobback" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						<li><a href="https://www.linkedin.com/in/michelle-tobback-30628b304/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
+						<li><a href="https://hedera-the-vvitch.itch.io/" class="icon brands fa-itch-io"><span class="label">ItchIO</span></a></li>
+						<li><a href="https://sketchfab.com/michelletobback" i class="fa-solid fa-cube"></a></li>
+					</ul>
+				</section>
+			</section>
+		</footer>
+
+		<!-- Copyright -->
+		<div id="copyright">
+			<ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+		</div>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
 </html>
